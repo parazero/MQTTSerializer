@@ -32,7 +32,7 @@ namespace Ser2
         /// t1/t555 is just an arbitary topic that i'm publishing to. (It needs 2 parts for the rule I'm using to work)
         /// </summary>
         private const string Topic = "DeviceStatus";
-
+        //
 
         static void Main(string[] args)
         {
