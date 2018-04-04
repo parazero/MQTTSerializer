@@ -11,6 +11,7 @@ using Ser2.Initializers;
 using Ser2.Parser;
 using uPLibrary.Networking.M2Mqtt;
 using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
 
 namespace Ser2
 {
@@ -74,6 +75,9 @@ namespace Ser2
             StatusMessage ParsedStatusMessage = new StatusMessage();
             MessageParser.StatusMessageParser(out ParsedStatusMessage, StatusMessageFieldsIndex, StatusMessageFieldsSize);
 
+            List<Byte> termsList = new List<Byte>();
+            termsList = EncodeValuesAsBytesInList(4, 400, termsList);
+
             Message += EncodeValuesAsBytes(1, (uint)2) + ",";
             Message += EncodeValuesAsBytes(2, (uint)0)+ ",";
             Message += EncodeValuesAsBytes(4, 300)+ ",";
@@ -96,6 +100,8 @@ namespace Ser2
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,0  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,0   ,0  ,255 ,0   ,1  ,1  ,3 
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,Acc,YearL,YearH,Mnth,Day,Hour,Min,Sec,MiliL,MiliH,Mode,RTA,BCSL,BCSH,IMU,FSD,RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,1  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,6   ,1  ,10  ,0   ,1  ,3  ,1
+            Byte[] terms = termsList.ToArray();
+
             StatusMessage NewMessage = new StatusMessage();
             NewMessage.OpCode = OpCode;
             NewMessage.MessageCounter = MessageCounter;
@@ -219,6 +225,44 @@ namespace Ser2
             return TmpStr;
         }
 
+        public static List<Byte> EncodeValuesAsBytesInList(int size, uint value, List<Byte> TempList)
+        {
+            byte byte1 = 0;
+            byte byte2 = 0;
+            byte byte3 = 0;
+            byte byte4 = 0;
+            //string TmpStr = "";
+            if (size == 1)
+            {
+                byte1 = (byte)(value & 0xFF);
+
+                TempList.Add(byte1);
+            }
+            if (size == 2)
+            {
+                byte1 = (byte)(value & 0xFF);
+                value = (uint)(value >> 8);
+                byte2 = (byte)(value & 0xFF);
+                TempList.Add(byte1);
+                TempList.Add(byte2);
+            }
+            if (size == 4)
+            {
+                byte1 = (byte)(value & 0xFF);
+                value = (uint)(value >> 8);
+                byte2 = (byte)(value & 0xFF);
+                value = (uint)(value >> 8);
+                byte3 = (byte)(value & 0xFF);
+                value = (uint)(value >> 8);
+                byte4 = (byte)(value & 0xFF);
+                TempList.Add(byte1);
+                TempList.Add(byte2);
+                TempList.Add(byte3);
+                TempList.Add(byte4);
+            }
+            return TempList;
+        }
+
         public void Publish()
         {
             //convert to pfx using openssl - see confluence
@@ -240,7 +284,7 @@ namespace Ser2
                 Console.WriteLine("SUCCESS!");
             }
             //wait so that we can see the outcome
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }
