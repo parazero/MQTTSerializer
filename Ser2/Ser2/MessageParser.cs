@@ -13,7 +13,9 @@ namespace Ser2.Parser
 {
     public class MessageParser
     {
-        public static void StatusMessageParser(out StatusMessage messageToParse, StatusMessage statusMessageIndex, StatusMessage statusMessageSize)
+        /*Read values from (const) file, than parse them to and return as message accordingto truct
+        */
+public static void StatusMessageParser(out StatusMessage messageToParse, StatusMessage statusMessageIndex, StatusMessage statusMessageSize)
         {
             messageToParse.OpCode = ManualSerializer.ReturnSByteValue(statusMessageIndex.OpCode,
                                                                       statusMessageSize.OpCode);
