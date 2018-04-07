@@ -29,6 +29,7 @@ namespace Ser2
             const int BrokerPort = 8883;
             const string DeviceStatusTopic = "DeviceStatus";
             const string PhysicalDataTopic = "PhysicalData";
+            const string KinematicDataTopic = "KinematicData";
             X509Certificate2 clientCert = new X509Certificate2("YOURPFXFILE.pfx", "1");
             X509Certificate caCert = X509Certificate.CreateFromSignedFile("rootCA.pem");
             // create the client
@@ -44,24 +45,29 @@ namespace Ser2
             //string Message = "";
 
             Console.WriteLine("Hello World!");
-
-            //Initialize messages
-            //Status message
+//Initialize messages
+    //Status message
             StatusMessage StatusMessageFieldsSize = new StatusMessage();
             MessageInitializers.StatusMessageFieldSizeInitializer(out StatusMessageFieldsSize);
 
             StatusMessage StatusMessageFieldsIndex = new StatusMessage();
             MessageInitializers.StatusMessageFieldIndexInitializer(out StatusMessageFieldsIndex);
 
-            //Physical message
+    //Physical message
             PhysicalMessage PhysicalMessageFieldsSize = new PhysicalMessage();
             MessageInitializers.PhysicalMessageFieldSizeInitializer(out PhysicalMessageFieldsSize);
 
             PhysicalMessage PhysicalMessageFieldsIndex = new PhysicalMessage();
             MessageInitializers.PhysicalMessageFieldIndexInitializer(out PhysicalMessageFieldsIndex);
 
+    //Kinematic message
+            KinematicMessage KinematicMessageFieldsSize = new KinematicMessage();
+            MessageInitializers.KinematicMessageFieldSizeInitializer(out KinematicMessageFieldsSize);
 
-            //Start Application part 
+            KinematicMessage KinematicMessageFieldsIndex = new KinematicMessage();
+            MessageInitializers.KinematicMessageFieldIndexInitializer(out KinematicMessageFieldsIndex);
+
+    //Start Application part 
 
             WriteDefaultValues(fileName);
             //Parse old string message form IoT Core export to actual vlaues
@@ -148,7 +154,7 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMiliSec,
                                                                    (uint)0, termsList);//Mili
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.Mode,
-                                                                   (uint)6, termsList);//Mode
+                                                                   (uint)4, termsList);//Mode
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RTA,
                                                                    (uint)1, termsList);//Ready To Arm
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.BCS,
@@ -162,17 +168,140 @@ namespace Ser2
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,0  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,0   ,0  ,255 ,0   ,1  ,1  ,3 
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,Acc,YearL,YearH,Mnth,Day,Hour,Min,Sec,MiliL,MiliH,Mode,RTA,BCSL,BCSH,IMU,FSD,RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,1  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,6   ,1  ,10  ,0   ,1  ,3  ,1
+            //Convert list to Array
             Byte[] terms = termsList.ToArray();
             //client.Connect("clientid1");
+            //Publish message
             client.Publish(DeviceStatusTopic, terms, 0, false);
 
             termsList.Clear();
-
+            //Generate Physical data message
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.OpCode, 3, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.MessageCounter, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart1, 600, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart2, 700, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart3, 800, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.TimeSource, 2, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSYear, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSMonth, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSDay, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSHour, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSMinute, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSSecond, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSMiliSec, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.NumberOfSatellites, 17, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Latitude, 32100000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Longitude, 35200000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSAltitude, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSVelocity, 3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSAngle, 5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSGroundSpeed, 15, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Temperature, 32, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Humidity, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.UVAUVB, 0, termsList);
+            Byte[] terms2 = termsList.ToArray();
+            //client.Connect("clientid1");
+            client.Publish(PhysicalDataTopic, terms2, 0, false);
+
+            //Generate Kinematic message
+            termsList.Clear();
+            //Generate Physical data message
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OpCode, 4, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MessageCounter, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart1, 600, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart2, 700, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart3, 800, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.TimeSource, 2, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSYear, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMonth, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSDay, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSHour, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMinute, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSSecond, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMiliSec, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.BaroHeight, 17, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Pressure, 3200, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccX, 3500, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccY, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccZ, 3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagX, 5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagY, 15, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagZ, 32, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroX, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Heading, 10, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Roll, 20, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Pitch, 40, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravZ, 0, termsList);
+
+            Byte[] terms3 = termsList.ToArray();
+            //client.Connect("clientid1");
+            client.Publish(KinematicDataTopic, terms3, 0, false);
+
+            termsList.Clear();
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.OpCode, (uint)2,
+                                                                   termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.MessageCounter,
+                                                                   (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)StatusMessageFieldsSize.IDPart1,
+                                                                   600, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)StatusMessageFieldsSize.IDPart2,
+                                                                   700, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)StatusMessageFieldsSize.IDPart3,
+                                                                   900, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.TimeSource,
+                                                                   (uint)2, termsList);//Accurate
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSYear,
+                                                                   (uint)0, termsList);//Year
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMonth,
+                                                                   (uint)0, termsList);//Month
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSDay,
+                                                                   (uint)0, termsList);//Day
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSHour,
+                                                                   (uint)0, termsList);//Hour
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMinute,
+                                                                   (uint)0, termsList);//Min
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSSecond,
+                                                                   (uint)0, termsList);//Sec
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMiliSec,
+                                                                   (uint)0, termsList);//Mili
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.Mode,
+                                                                   (uint)7, termsList);//Mode
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RTA,
+                                                                   (uint)1, termsList);//Ready To Arm
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.BCS,
+                                                                   (uint)160, termsList);//Battery LSB=0.1
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.IMUStatus,
+                                                                   (uint)1, termsList);//IMU
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.FDS,
+                                                                   (uint)3, termsList);//Flash
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RCChannels,
+                                                                   (uint)1, termsList);//RC
+            //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,0  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,0   ,0  ,255 ,0   ,1  ,1  ,3 
+            //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,Acc,YearL,YearH,Mnth,Day,Hour,Min,Sec,MiliL,MiliH,Mode,RTA,BCSL,BCSH,IMU,FSD,RC
+            //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,1  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,6   ,1  ,10  ,0   ,1  ,3  ,1
+            //Convert list to Array
+            Byte[] terms6 = termsList.ToArray();
+            //client.Connect("clientid1");
+            //Publish message
+            client.Publish(DeviceStatusTopic, terms6, 0, false);
+
+            termsList.Clear();
+            //Generate Physical data message
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.OpCode, 3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.MessageCounter, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart1, 600, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart2, 700, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)PhysicalMessageFieldsSize.IDPart3, 900, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.TimeSource, 2, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSYear, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.GPSMonth, 0, termsList);
@@ -191,9 +320,53 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Temperature, 32, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.Humidity, 3000, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(PhysicalMessageFieldsSize.UVAUVB, 0, termsList);
-            Byte[] terms2 = termsList.ToArray();
+            Byte[] terms5 = termsList.ToArray();
             //client.Connect("clientid1");
-            client.Publish(PhysicalDataTopic, terms2, 0, false);
+            client.Publish(PhysicalDataTopic, terms5, 0, false);
+
+            //Generate Kinematic message
+            termsList.Clear();
+            //Generate Physical data message
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OpCode, 4, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MessageCounter, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart1, 600, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart2, 700, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart3, 900, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.TimeSource, 2, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSYear, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMonth, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSDay, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSHour, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMinute, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSSecond, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GPSMiliSec, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.BaroHeight, 17, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Pressure, 3200, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccX, 3500, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccY, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.AccZ, 3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagX, 5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagY, 15, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MagZ, 32, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroX, 3000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GyroZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Heading, 10, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Roll, 20, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.Pitch, 40, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravX, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravY, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.GravZ, 0, termsList);
+
+            Byte[] terms4 = termsList.ToArray();
+            //client.Connect("clientid1");
+            client.Publish(KinematicDataTopic, terms4, 0, false);
 
 
             //client.Disconnect();

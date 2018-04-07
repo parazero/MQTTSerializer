@@ -112,6 +112,86 @@ namespace Ser2.Initializers
             MessageFieldsIndex.Humidity         = 44;
             MessageFieldsIndex.UVAUVB           = 46;
         }
+
+        public static void KinematicMessageFieldSizeInitializer(out KinematicMessage MessageFieldsSize)
+        {
+            MessageFieldsSize.OpCode = 1;
+            MessageFieldsSize.MessageCounter = 2;
+            MessageFieldsSize.IDPart1 = 4;
+            MessageFieldsSize.IDPart2 = 4;
+            MessageFieldsSize.IDPart3 = 4;
+            MessageFieldsSize.TimeSource = 1;
+            MessageFieldsSize.GPSYear = 2;
+            MessageFieldsSize.GPSMonth = 1;
+            MessageFieldsSize.GPSDay = 1;
+            MessageFieldsSize.GPSHour = 1;
+            MessageFieldsSize.GPSMinute = 1;
+            MessageFieldsSize.GPSSecond = 1;
+            MessageFieldsSize.GPSMiliSec = 2;
+            MessageFieldsSize.BaroHeight = 2;
+            MessageFieldsSize.Pressure = 2;
+            MessageFieldsSize.AccX = 2;
+            MessageFieldsSize.AccY = 2;
+            MessageFieldsSize.AccZ = 2;
+            MessageFieldsSize.MagX = 2;
+            MessageFieldsSize.MagY = 2;
+            MessageFieldsSize.MagZ = 2;
+            MessageFieldsSize.GyroX = 2;
+            MessageFieldsSize.GyroY = 2;
+            MessageFieldsSize.GyroZ = 2;
+            MessageFieldsSize.Heading = 2;
+            MessageFieldsSize.Roll = 2;
+            MessageFieldsSize.Pitch = 2;
+            MessageFieldsSize.OrientationX = 2;
+            MessageFieldsSize.OrientationY = 2;
+            MessageFieldsSize.OrientationZ = 2;
+            MessageFieldsSize.LinearAccX = 2;
+            MessageFieldsSize.LinearAccY = 2;
+            MessageFieldsSize.LinearAccZ = 2;
+            MessageFieldsSize.GravX = 2;
+            MessageFieldsSize.GravY = 2;
+            MessageFieldsSize.GravZ = 2;
+            //return MessageFieldsSize;
+        }
+        public static void KinematicMessageFieldIndexInitializer(out KinematicMessage MessageFieldsIndex)
+        {
+            MessageFieldsIndex.OpCode = 0;
+            MessageFieldsIndex.MessageCounter = 1;
+            MessageFieldsIndex.IDPart1 = 3;
+            MessageFieldsIndex.IDPart2 = 7;
+            MessageFieldsIndex.IDPart3 = 11;
+            MessageFieldsIndex.TimeSource = 15;
+            MessageFieldsIndex.GPSYear = 16;
+            MessageFieldsIndex.GPSMonth = 18;
+            MessageFieldsIndex.GPSDay = 19;
+            MessageFieldsIndex.GPSHour = 20;
+            MessageFieldsIndex.GPSMinute = 21;
+            MessageFieldsIndex.GPSSecond = 22;
+            MessageFieldsIndex.GPSMiliSec = 23;
+            MessageFieldsIndex.BaroHeight = 25;
+            MessageFieldsIndex.Pressure = 27;
+            MessageFieldsIndex.AccX = 29;
+            MessageFieldsIndex.AccY = 31;
+            MessageFieldsIndex.AccZ = 33;
+            MessageFieldsIndex.MagX = 35;
+            MessageFieldsIndex.MagY = 37;
+            MessageFieldsIndex.MagZ = 39;
+            MessageFieldsIndex.GyroX = 41;
+            MessageFieldsIndex.GyroY = 43;
+            MessageFieldsIndex.GyroZ = 45;
+            MessageFieldsIndex.Heading = 47;
+            MessageFieldsIndex.Roll = 49;
+            MessageFieldsIndex.Pitch = 51;
+            MessageFieldsIndex.OrientationX = 52;
+            MessageFieldsIndex.OrientationY = 55;
+            MessageFieldsIndex.OrientationZ = 57;
+            MessageFieldsIndex.LinearAccX = 59;
+            MessageFieldsIndex.LinearAccY = 61;
+            MessageFieldsIndex.LinearAccZ = 63;
+            MessageFieldsIndex.GravX = 65;
+            MessageFieldsIndex.GravY = 67;
+            MessageFieldsIndex.GravZ = 69;
+        }
     }
 }                            
                              
