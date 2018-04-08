@@ -145,6 +145,7 @@ namespace Ser2.Initializers
             MessageFieldsSize.OrientationX = 2;
             MessageFieldsSize.OrientationY = 2;
             MessageFieldsSize.OrientationZ = 2;
+            MessageFieldsSize.OrientationW = 2;
             MessageFieldsSize.LinearAccX = 2;
             MessageFieldsSize.LinearAccY = 2;
             MessageFieldsSize.LinearAccZ = 2;
@@ -185,12 +186,13 @@ namespace Ser2.Initializers
             MessageFieldsIndex.OrientationX = 52;
             MessageFieldsIndex.OrientationY = 55;
             MessageFieldsIndex.OrientationZ = 57;
-            MessageFieldsIndex.LinearAccX = 59;
-            MessageFieldsIndex.LinearAccY = 61;
-            MessageFieldsIndex.LinearAccZ = 63;
-            MessageFieldsIndex.GravX = 65;
-            MessageFieldsIndex.GravY = 67;
-            MessageFieldsIndex.GravZ = 69;
+            MessageFieldsIndex.OrientationW = 59;
+            MessageFieldsIndex.LinearAccX = 61;
+            MessageFieldsIndex.LinearAccY = 63;
+            MessageFieldsIndex.LinearAccZ = 65;
+            MessageFieldsIndex.GravX = 67;
+            MessageFieldsIndex.GravY = 69;
+            MessageFieldsIndex.GravZ = 71;
         }
     }
 }                            

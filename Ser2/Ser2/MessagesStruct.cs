@@ -83,6 +83,7 @@ namespace Ser2.MessagesStructs
         public Int16 OrientationX;
         public Int16 OrientationY;
         public Int16 OrientationZ;
+        public Int16 OrientationW;
         public Int16 LinearAccX;
         public Int16 LinearAccY;
         public Int16 LinearAccZ;

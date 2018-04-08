@@ -236,6 +236,7 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationX, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationY, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationW, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccX, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccY, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccZ, 0, termsList);
@@ -357,6 +358,7 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationX, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationY, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationZ, 0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OrientationW, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccX, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccY, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.LinearAccZ, 0, termsList);
