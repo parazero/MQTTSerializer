@@ -30,6 +30,7 @@ namespace Ser2
             const string DeviceStatusTopic = "DeviceStatus";
             const string PhysicalDataTopic = "PhysicalData";
             const string KinematicDataTopic = "KinematicData";
+            const string InitializationDataTopic = "InitData";
             X509Certificate2 clientCert = new X509Certificate2("YOURPFXFILE.pfx", "1");
             X509Certificate caCert = X509Certificate.CreateFromSignedFile("rootCA.pem");
             // create the client
@@ -67,6 +68,12 @@ namespace Ser2
             KinematicMessage KinematicMessageFieldsIndex = new KinematicMessage();
             MessageInitializers.KinematicMessageFieldIndexInitializer(out KinematicMessageFieldsIndex);
 
+    //Initialization message
+            InitializtionMessage InitMessageFieldsSize = new InitializtionMessage();
+            MessageInitializers.InitMessageFieldSizeInitializer(out InitMessageFieldsSize);
+
+            InitializtionMessage InitMessageFieldsIndex = new InitializtionMessage();
+            MessageInitializers.InitMessageFieldIndexInitializer (out InitMessageFieldsIndex);
     //Start Application part 
 
             WriteDefaultValues(fileName);
@@ -154,17 +161,17 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMiliSec,
                                                                    (uint)0, termsList);//Mili
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.Mode,
-                                                                   (uint)4, termsList);//Mode
+                                                                   (uint)2, termsList);//Mode
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RTA,
-                                                                   (uint)1, termsList);//Ready To Arm
+                                                                   (uint)2, termsList);//Ready To Arm
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.BCS,
                                                                    (uint)160, termsList);//Battery LSB=0.1
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.IMUStatus,
-                                                                   (uint)1, termsList);//IMU
+                                                                   (uint)2, termsList);//IMU
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.FDS,
                                                                    (uint)3, termsList);//Flash
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RCChannels,
-                                                                   (uint)1, termsList);//RC
+                                                                   (uint)0, termsList);//RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,0  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,0   ,0  ,255 ,0   ,1  ,1  ,3 
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,Acc,YearL,YearH,Mnth,Day,Hour,Min,Sec,MiliL,MiliH,Mode,RTA,BCSL,BCSH,IMU,FSD,RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,1  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,6   ,1  ,10  ,0   ,1  ,3  ,1
@@ -248,6 +255,66 @@ namespace Ser2
             //client.Connect("clientid1");
             client.Publish(KinematicDataTopic, terms3, 0, false);
 
+            //Generate Initialization message
+            termsList.Clear();
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.OpCode                   , (uint)1,termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.MessageCounter           , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)InitMessageFieldsSize.IDPart1, (uint)600, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)InitMessageFieldsSize.IDPart2, (uint)700, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList((int)InitMessageFieldsSize.IDPart3, (uint)800, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.TimeSource               , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSYear                  , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSMonth                 , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSDay                   , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSHour                  , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSMinute                , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSSecond                , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.GPSMiliSec               , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.SWVersionID              , (uint)1000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.HWVersionID              , (uint)1000, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.ArmHeight                , (uint)5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.DisarmHeight             , (uint)3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.VibrationsValue          , (uint)2, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.NoVibrationTime          , (uint)250, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.VibrationFrequency       , (uint)5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.RollCalibration          , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PitchCalibration         , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.RollInitMargin           , (uint)5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PitchInitMargin          , (uint)5, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.IMUConfiguration         , (uint)15, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.RCConfiguration          , (uint)3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.BatteryCells             , (uint)4, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.MotorDelay               , (uint)50, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.RollAttitudeLimit        , (uint)65, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PitchAttitudeLimit       , (uint)65, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.FreefallDuration         , (uint)250, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.FreefallLimit            , (uint)3, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.AngularSpeedRateLimit    , (uint)150, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.AngularSpeedLimit        , (uint)65, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.YawRateLimit             , (uint)150, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.ActiveHeightSource       , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.MaximumHeight            , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.LandingGear              , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.ArmMode                  , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PyroSensorCalib          , (uint)35, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PyroSensorMeasurement    , (uint)19, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.PyroTestRate             , (uint)15, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.EmergencyBattery         , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.Destination              , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.SDCard                   , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.TriggeringMode           , (uint)1, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.FiveVoltIndication       , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.EmergencyBatteryVoltageIndication , (uint)0, termsList);
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.TwelveVoltageIndication   , (uint)0, termsList);  
+            termsList = ManualSerializer.EncodeValuesAsBytesInList(InitMessageFieldsSize.CapacitorVoltageIndication, (uint)0, termsList);
+
+            //Convert list to Array
+            Byte[] terms7 = termsList.ToArray();
+            //client.Connect("clientid1");
+            //Publish message
+            client.Publish(InitializationDataTopic, terms7, 0, false);
+
+
             termsList.Clear();
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.OpCode, (uint)2,
                                                                    termsList);
@@ -276,7 +343,7 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.GPSMiliSec,
                                                                    (uint)0, termsList);//Mili
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.Mode,
-                                                                   (uint)7, termsList);//Mode
+                                                                   (uint)6, termsList);//Mode
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RTA,
                                                                    (uint)1, termsList);//Ready To Arm
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.BCS,
@@ -286,7 +353,7 @@ namespace Ser2
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.FDS,
                                                                    (uint)3, termsList);//Flash
             termsList = ManualSerializer.EncodeValuesAsBytesInList(StatusMessageFieldsSize.RCChannels,
-                                                                   (uint)1, termsList);//RC
+                                                                   (uint)0, termsList);//RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,0  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,0   ,0  ,255 ,0   ,1  ,1  ,3 
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,Acc,YearL,YearH,Mnth,Day,Hour,Min,Sec,MiliL,MiliH,Mode,RTA,BCSL,BCSH,IMU,FSD,RC
             //2,0,0,3,0,0,0,4,0,0,0,5,0,0,0,1  ,0    ,0    ,0   ,0  ,0   ,0  ,0  ,0    ,0    ,6   ,1  ,10  ,0   ,1  ,3  ,1
@@ -396,7 +463,7 @@ namespace Ser2
 
             string Message2 = Encoders.MessageEncoder.StatusMessageEncoder(NewMessage, StatusMessageFieldsSize);
             */
-            client.Disconnect();
+//            client.Disconnect();
             Console.WriteLine("Its the End of the world as we know it!");
         }
         public static void WriteDefaultValues(string filename)
