@@ -12,6 +12,7 @@ using Ser2.Parser;
 using uPLibrary.Networking.M2Mqtt;
 using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
+using Ser2.Player;
 
 namespace Ser2
 {
@@ -33,19 +34,25 @@ namespace Ser2
             const string InitializationDataTopic = "InitData";
             X509Certificate2 clientCert = new X509Certificate2("YOURPFXFILE.pfx", "1");
             X509Certificate caCert = X509Certificate.CreateFromSignedFile("rootCA.pem");
+
             // create the client
             MqttClient client = new MqttClient(IotEndpoint, BrokerPort, true, caCert, clientCert, MqttSslProtocols.TLSv1_2);
+
             //message to publish - could be anything
             //client naming has to be unique if there was more than one publisher
             client.Connect("clientid1");
+
             //publish to the topic
-            //Byte[] A = { 2, 0, 0, 44, 1, 0, 0, 144, 1, 0, 0, 244, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 200, 0, 1, 3, 1 };
             Byte[] A = { 2 };
             client.Publish("hello", A, 0, false);
 
             //string Message = "";
-
             Console.WriteLine("Hello World!");
+
+            //System.Diagnostics.Process.Start("open", $"-R \"/Users/nadavguy/Downloads/")
+
+            DataPlayer.player(@"/Users/nadavguy/Downloads/subscription.csv", client);
+
 //Initialize messages
     //Status message
             StatusMessage StatusMessageFieldsSize = new StatusMessage();
@@ -212,7 +219,6 @@ namespace Ser2
 
             //Generate Kinematic message
             termsList.Clear();
-            //Generate Physical data message
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.OpCode, 4, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList(KinematicMessageFieldsSize.MessageCounter, 0, termsList);
             termsList = ManualSerializer.EncodeValuesAsBytesInList((int)KinematicMessageFieldsSize.IDPart1, 600, termsList);
