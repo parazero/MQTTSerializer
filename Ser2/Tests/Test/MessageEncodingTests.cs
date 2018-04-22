@@ -105,5 +105,59 @@ namespace Test.Encoding
             Assert.AreEqual(Convert.ToBase64String(ExpectedArray), Convert.ToBase64String(messageinValues));
         }
 
+        [TestMethod]
+        public void KinematicMessageEncodingTests()
+        {
+            KinematicMessage testKinematicMessageSize = new KinematicMessage();
+            KinematicMessage testKinematicMessageIndex = new KinematicMessage();
+
+            MessageInitializers.KinematicMessageFieldSizeInitializer(out testKinematicMessageSize);
+            MessageInitializers.KinematicMessageFieldIndexInitializer(out testKinematicMessageIndex);
+
+            List<Byte> messageValuesList = new List<Byte>();
+
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.OpCode, 4,            messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.MessageCounter, 0,    messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList((int)testKinematicMessageSize.IDPart1, 600,    messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList((int)testKinematicMessageSize.IDPart2, 700,    messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList((int)testKinematicMessageSize.IDPart3, 800,    messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.TimeSource, 2,        messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSYear, 0,           messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSMonth, 0,          messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSDay, 0,            messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSHour, 0,           messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSMinute, 0,         messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSSecond, 0,         messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GPSMiliSec, 0,        messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.BaroHeight, 17,       messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.Pressure, 3200,       messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.AccX, 3500,           messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.AccY, 3000,           messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.AccZ, 3,              messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.MagX, 5,              messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.MagY, 15,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.MagZ, 32,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GyroX, 3000,          messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GyroY, 0,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GyroZ, 0,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.Heading, 10,          messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.Roll, 20,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.Pitch, 40,            messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.OrientationX, 0,      messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.OrientationY, 0,      messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.OrientationZ, 0,      messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.OrientationW, 0,      messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.LinearAccX, 0,        messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.LinearAccY, 0,        messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.LinearAccZ, 0,        messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GravX, 0,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GravY, 0,             messageValuesList);
+            messageValuesList = ManualSerializer.EncodeValuesAsBytesInList(testKinematicMessageSize.GravZ, 0,             messageValuesList);
+            //Convert list to Array
+            Byte[] messageinValues = messageValuesList.ToArray();
+            Byte[] ExpectedArray = { 4, 0, 0, 88, 2, 0, 0, 188, 2, 0, 0, 32, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 128, 12, 172, 13, 184, 11, 3, 0, 5, 0, 15, 0, 32, 0, 184, 11, 0, 0, 0, 0, 10, 0, 20, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            Assert.AreEqual(Convert.ToBase64String(ExpectedArray), Convert.ToBase64String(messageinValues));
+        }
+
     }
 }
