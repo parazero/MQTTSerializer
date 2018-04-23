@@ -49,9 +49,17 @@ namespace Ser2
             //string Message = "";
             Console.WriteLine("Hello World!");
 
-            //System.Diagnostics.Process.Start("open", $"-R \"/Users/nadavguy/Downloads/")
+            //For Future use when Export form DB will have millisecond
+           /* StreamReader reader = new StreamReader(@"/Users/nadavguy/Downloads/physical-data-messages-2018-04-08.csv");
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                var values = line.Split(',');
+                Convert.ToDateTime(values[6].Substring(0,19))
+            }*/
 
-            DataPlayer.player(@"/Users/nadavguy/Downloads/subscription.csv", client);
+            //Play old data capured from IoT (not DB export)
+            //DataPlayer.playerFromIoTCapture(@"/Users/nadavguy/Downloads/subscription2.csv", client);
 
 //Initialize messages
     //Status message

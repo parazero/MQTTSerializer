@@ -139,5 +139,32 @@ namespace Ser2.Parser
             messageToParse.GravY = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GravY, MessageSize.GravY, false, arraytoParse);
             messageToParse.GravZ = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GravZ, MessageSize.GravZ, false, arraytoParse);
         }
+
+        public static void PhysicalMessageParserFromByteArray(out PhysicalMessage messageToParse, PhysicalMessage MessageIndex, PhysicalMessage MessageSize, Byte[] arraytoParse)
+        {
+            messageToParse.OpCode = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.OpCode, MessageSize.OpCode, arraytoParse);
+            messageToParse.MessageCounter = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.MessageCounter, MessageSize.MessageCounter, false, arraytoParse);
+            messageToParse.IDPart1 = ManualSerializer.ReturnUint32ValueFromByteArray((int)MessageIndex.IDPart1, (int)MessageSize.IDPart1, false, arraytoParse);
+            messageToParse.IDPart2 = ManualSerializer.ReturnUint32ValueFromByteArray((int)MessageIndex.IDPart2, (int)MessageSize.IDPart2, false, arraytoParse);
+            messageToParse.IDPart3 = ManualSerializer.ReturnUint32ValueFromByteArray((int)MessageIndex.IDPart3, (int)MessageSize.IDPart3, false, arraytoParse);
+            messageToParse.TimeSource = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.TimeSource, MessageSize.TimeSource, arraytoParse);
+            messageToParse.GPSYear = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSYear, MessageSize.GPSYear, false, arraytoParse);
+            messageToParse.GPSMonth = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.GPSMonth, MessageSize.GPSMonth, arraytoParse);
+            messageToParse.GPSDay = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.GPSDay, MessageSize.GPSDay, arraytoParse);
+            messageToParse.GPSHour = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.GPSHour, MessageSize.GPSHour, arraytoParse);
+            messageToParse.GPSMinute = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.GPSMinute, MessageSize.GPSMinute, arraytoParse);
+            messageToParse.GPSSecond = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.GPSSecond, MessageSize.GPSSecond, arraytoParse);
+            messageToParse.GPSMiliSec = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSMiliSec, MessageSize.GPSMiliSec, false, arraytoParse);
+            messageToParse.NumberOfSatellites = ManualSerializer.ReturnSByteValueFromByteArray(MessageIndex.NumberOfSatellites, MessageSize.NumberOfSatellites, arraytoParse);
+            messageToParse.Latitude = (int)ManualSerializer.ReturnUint32ValueFromByteArray(MessageIndex.Latitude, MessageSize.Latitude, false, arraytoParse);
+            messageToParse.Longitude = (int)ManualSerializer.ReturnUint32ValueFromByteArray(MessageIndex.Longitude, MessageSize.Longitude, false, arraytoParse);
+            messageToParse.GPSAltitude = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSAltitude, MessageSize.GPSAltitude, false, arraytoParse);
+            messageToParse.GPSVelocity = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSVelocity, MessageSize.GPSVelocity, false, arraytoParse);
+            messageToParse.GPSAngle = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSAngle, MessageSize.GPSAngle, false, arraytoParse);
+            messageToParse.GPSGroundSpeed = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.GPSGroundSpeed, MessageSize.GPSGroundSpeed, false, arraytoParse);
+            messageToParse.Temperature = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.Temperature, MessageSize.Temperature, false, arraytoParse);
+            messageToParse.Humidity = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.Humidity, MessageSize.Humidity, false, arraytoParse);
+            messageToParse.UVAUVB = ManualSerializer.ReturnInt16ValueFromByteArray(MessageIndex.UVAUVB, MessageSize.UVAUVB, false, arraytoParse);
+        }
     }
 }
