@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ser2.MessagesStructs;
 using Ser2.Initializers;
 
-namespace StructureTests
+namespace Tests.MessageStructure
 {
     [TestClass]
     public class MessageSructureTests

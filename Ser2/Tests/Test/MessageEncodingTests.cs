@@ -5,7 +5,7 @@ using Ser2.MessagesStructs;
 using Ser2.Initializers;
 using Ser2.Serializer;
 
-namespace Test.Encoding
+namespace Tests.MessageEncoding
 {
     [TestClass]
     public class MessageEncodingTests
